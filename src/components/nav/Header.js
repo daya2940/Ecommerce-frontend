@@ -18,8 +18,11 @@ const Header = () => {
       <Menu.Item key="home" icon={<MailOutlined />}>
         <Link to="/">Home</Link>
       </Menu.Item>
-      <Menu.Item key="Login" disabled icon={<UserOutlined />}>
+      <Menu.Item key="Login" icon={<UserOutlined />}>
         <Link to="/login">Login</Link>
+      </Menu.Item>
+      <Menu.Item key="Register" icon={<UserOutlined />}>
+        <Link to="/register">Register</Link>
       </Menu.Item>
     </Menu>
   );
