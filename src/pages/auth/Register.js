@@ -24,13 +24,20 @@ const Register = () => {
       <input
         type="email"
         className="form-control"
-        placeholder="Enter Email"
+        placeholder="Your Email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         autoFocus
       />
       <div className="d-flex justify-content-center mt-4">
-        <Button type="primary" htmlType="submit" className="btn btn-raised">
+        <Button
+          type="primary"
+          type="primary"
+          htmlType="submit"
+          className="mb-3"
+          block
+          shape="round"
+        >
           Register
         </Button>
       </div>
