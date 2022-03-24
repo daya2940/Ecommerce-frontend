@@ -10,6 +10,7 @@ import {
 import { Link } from "react-router-dom";
 import firebase from "firebase/compat/app";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
 
@@ -18,6 +19,7 @@ const { SubMenu } = Menu;
 const Header = () => {
   const [current, setCurrent] = useState("home");
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { user } = useSelector((state) => ({ ...state }));
 
   const handleClick = (e) => {
@@ -30,6 +32,7 @@ const Header = () => {
       type: LOGOUT,
       payload: null,
     });
+    navigate("/login");
   };
   return (
     <Menu onClick={handleClick} selectedKeys={[current]} mode="horizontal">

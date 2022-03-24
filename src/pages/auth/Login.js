@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "antd";
 import { MailOutlined, GoogleOutlined } from "@ant-design/icons";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { LOGGED_IN_USER } from "../../constants/userConstants";
 import { useNavigate, Link } from "react-router-dom";
 
@@ -9,11 +9,18 @@ import { auth, googleAuthProvider } from "../../firebase";
 import { toast } from "react-toastify";
 
 const Register = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const { user } = useSelector((state) => ({ ...state }));
+
+  useEffect(() => {
+    if (user?.token) {
+      navigate("/");
+    }
+  }, [user]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -102,7 +109,10 @@ const Register = () => {
       >
         Login with Google
       </Button>
-      <Link to="/forgot/password" className="d-flex justify-content-end">
+      <Link
+        to="/forgot/password"
+        className="d-flex justify-content-end text-danger"
+      >
         Forgot password
       </Link>
     </form>
