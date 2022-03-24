@@ -1,23 +1,64 @@
 import React, { useState } from "react";
 import { Button } from "antd";
-import { MailOutlined, SettingOutlined, UserOutlined } from "@ant-design/icons";
+import { MailOutlined, GoogleOutlined } from "@ant-design/icons";
+import { useDispatch } from "react-redux";
+import { LOGGED_IN_USER } from "../../constants/userConstants";
+import { useNavigate, Link } from "react-router-dom";
 
-import { auth } from "../../firebase";
+import { auth, googleAuthProvider } from "../../firebase";
 import { toast } from "react-toastify";
 
 const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    console.log("submit");
     e.preventDefault();
-
-    console.table(email, password);
+    try {
+      setLoading(true);
+      const result = await auth.signInWithEmailAndPassword(email, password);
+      const { user } = result;
+      const idTokenResult = await user.getIdTokenResult();
+      dispatch({
+        type: LOGGED_IN_USER,
+        payload: {
+          email: user.email,
+          token: idTokenResult.token,
+        },
+      });
+      navigate("/");
+    } catch (err) {
+      toast.error(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const handleGoogleLogin = async (e) => {
+    e.preventDefault();
+    auth
+      .signInWithPopup(googleAuthProvider)
+      .then(async (result) => {
+        const { user } = result;
+        const idTokenResult = await user.getIdTokenResult();
+        dispatch({
+          type: LOGGED_IN_USER,
+          payload: {
+            email: user.email,
+            token: idTokenResult.token,
+          },
+        });
+        navigate("/");
+      })
+      .catch((err) => {
+        toast.error(err.message);
+      });
   };
 
   const loginForm = () => (
-    <form onSubmit={handleSubmit}>
+    <form>
       <div className="form-group">
         <input
           type="email"
@@ -31,26 +72,39 @@ const Register = () => {
           type="password"
           className="form-control mt-4"
           placeholder="Your password"
-          value={email}
+          value={password}
           onChange={(e) => setPassword(e.target.value)}
           autoFocus
         />
       </div>
 
-      <div className="d-flex justify-content-center mt-4">
-        <Button
-          type="primary"
-          htmlType="submit"
-          className="mb-3"
-          block
-          shape="round"
-          size="large"
-          disabled={!email || password.length < 6 ? true : false}
-          icon={<MailOutlined />}
-        >
-          Login with email/password
-        </Button>
-      </div>
+      <Button
+        type="primary"
+        className="mb-3 mt-4"
+        block
+        shape="round"
+        size="large"
+        disabled={!email || password.length < 6 ? true : false}
+        icon={<MailOutlined />}
+        loading={loading}
+        onClick={handleSubmit}
+      >
+        Login with email/password
+      </Button>
+      <Button
+        type="danger"
+        className="mb-3"
+        block
+        shape="round"
+        size="large"
+        icon={<GoogleOutlined />}
+        onClick={handleGoogleLogin}
+      >
+        Login with Google
+      </Button>
+      <Link to="/forgot/password" className="d-flex justify-content-end">
+        Forgot password
+      </Link>
     </form>
   );
   return (
