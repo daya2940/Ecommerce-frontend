@@ -2,14 +2,14 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyB6h5Pdt1HWIFcPWKC_HPpY4QCbg7uJJwE",
-  authDomain: "react-ecommerce-3d920.firebaseapp.com",
-  projectId: "react-ecommerce-3d920",
-  storageBucket: "react-ecommerce-3d920.appspot.com",
-  messagingSenderId: "124117391488",
-  appId: "1:124117391488:web:b29d181497eb0e7e646e65",
+  apiKey: "AIzaSyC4vM6BrBSiJxHGF-fmr6UO-P1kAG6a1cc",
+  authDomain: "ecommerce-react-app-98bf3.firebaseapp.com",
+  projectId: "ecommerce-react-app-98bf3",
+  storageBucket: "ecommerce-react-app-98bf3.appspot.com",
+  messagingSenderId: "728233281012",
+  appId: "1:728233281012:web:e78be951e71b40ca8825a1",
+  measurementId: "G-HFG1ZVXMKJ",
 };
 
 // Initialize Firebase

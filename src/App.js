@@ -10,6 +10,7 @@ import ForgotPassword from "./pages/auth/ForgotPassword";
 import { ToastContainer } from "react-toastify";
 import { Routes, Route } from "react-router-dom";
 import { LOGGED_IN_USER } from "./constants/userConstants";
+import { currentUser } from "./utils/helper";
 
 import { auth } from "./firebase";
 import { useDispatch } from "react-redux";
@@ -18,16 +19,24 @@ const App = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     const unSubscribe = auth.onAuthStateChanged(async (user) => {
-      console.log(user);
       if (user) {
         const idTokenResult = await user.getIdTokenResult();
-        dispatch({
-          type: LOGGED_IN_USER,
-          payload: {
-            email: user.email,
-            token: idTokenResult.token,
-          },
-        });
+        currentUser(idTokenResult.token)
+          .then((res) => {
+            dispatch({
+              type: LOGGED_IN_USER,
+              payload: {
+                name: res.data.name,
+                email: res.data.email,
+                token: idTokenResult.token,
+                role: res.data.role,
+                _id: res.data._id,
+              },
+            });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       }
     });
     return () => unSubscribe();

@@ -17,6 +17,11 @@ const Register = () => {
     }
   }, [user]);
   const handleSubmit = async (e) => {
+    if (user?.email === email) {
+      toast.error("User already exist.Please login");
+      navigate("/login");
+      return;
+    }
     console.log("submit");
     e.preventDefault();
     const config = {
@@ -47,6 +52,7 @@ const Register = () => {
           className="mb-3"
           block
           shape="round"
+          disabled={!email ? true : false}
         >
           Register
         </Button>
