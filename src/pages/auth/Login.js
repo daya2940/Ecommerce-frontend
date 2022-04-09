@@ -8,6 +8,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { auth, googleAuthProvider } from "../../firebase";
 import { toast } from "react-toastify";
 import { createOrUpdateUser } from "../../utils/helper";
+
 const Register = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -21,6 +22,14 @@ const Register = () => {
       navigate("/");
     }
   }, [user]);
+
+  const roleBasedRedirect = (res) => {
+    if (res.data.role === "admin") {
+      navigate("/admin/dashboard");
+    } else {
+      navigate("/user/history");
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -41,12 +50,11 @@ const Register = () => {
               _id: res.data._id,
             },
           });
+          roleBasedRedirect(res);
         })
         .catch((err) => {
           console.log(err);
         });
-
-      navigate("/");
     } catch (err) {
       toast.error(err.message);
     } finally {
@@ -72,11 +80,11 @@ const Register = () => {
                 _id: res.data._id,
               },
             });
+            roleBasedRedirect(res);
           })
           .catch((err) => {
             console.log(err);
           });
-        navigate("/");
       })
       .catch((err) => {
         toast.error(err.message);

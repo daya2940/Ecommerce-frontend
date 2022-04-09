@@ -7,10 +7,12 @@ import Home from "./pages/Home";
 import Header from "./components/nav/Header";
 import RegisterComplete from "./pages/auth/RegisterComplete";
 import ForgotPassword from "./pages/auth/ForgotPassword";
+import History from "./pages/user/History";
 import { ToastContainer } from "react-toastify";
 import { Routes, Route } from "react-router-dom";
 import { LOGGED_IN_USER } from "./constants/userConstants";
 import { currentUser } from "./utils/helper";
+import UserRoute from "./components/routes/UserRoute";
 
 import { auth } from "./firebase";
 import { useDispatch } from "react-redux";
@@ -51,6 +53,9 @@ const App = () => {
         <Route exact path="/register" element={<Register />} />
         <Route exact path="/register/complete" element={<RegisterComplete />} />
         <Route exact path="/forgot/password" element={<ForgotPassword />} />
+        <Route exact path="/user/history" element={<UserRoute />}>
+          <Route exact path="/user/history" element={<History />} />
+        </Route>
       </Routes>
     </>
   );
