@@ -1,6 +1,7 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 import { useSelector } from "react-redux";
+import LoadingToRedirect from "./LoadingToRedirect";
 
 //Role based authentication and route protecion
 const UserRoute = ({ children, ...rest }) => {
@@ -8,7 +9,7 @@ const UserRoute = ({ children, ...rest }) => {
   return user?.token ? (
     <Outlet {...rest} render={() => children} />
   ) : (
-    <h1 className="text-danger">Loading...</h1>
+    <LoadingToRedirect />
   );
 };
 

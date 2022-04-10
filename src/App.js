@@ -13,9 +13,12 @@ import { Routes, Route } from "react-router-dom";
 import { LOGGED_IN_USER } from "./constants/userConstants";
 import { currentUser } from "./utils/helper";
 import UserRoute from "./components/routes/UserRoute";
+import UserPassword from "./pages/user/Password";
+import UserWishList from "./pages/user/Wishlist";
 
 import { auth } from "./firebase";
 import { useDispatch } from "react-redux";
+import Wishlist from "./pages/user/Wishlist";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -55,6 +58,12 @@ const App = () => {
         <Route exact path="/forgot/password" element={<ForgotPassword />} />
         <Route exact path="/user/history" element={<UserRoute />}>
           <Route exact path="/user/history" element={<History />} />
+        </Route>
+        <Route exact path="/user/password" element={<UserRoute />}>
+          <Route exact path="/user/password" element={<UserPassword />}></Route>
+        </Route>
+        <Route exact path="/user/wishlist" element={<UserRoute />}>
+          <Route exact path="/user/wishlist" element={<Wishlist />}></Route>
         </Route>
       </Routes>
     </>
