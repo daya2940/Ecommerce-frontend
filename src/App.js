@@ -13,12 +13,14 @@ import { Routes, Route } from "react-router-dom";
 import { LOGGED_IN_USER } from "./constants/userConstants";
 import { currentUser } from "./utils/helper";
 import UserRoute from "./components/routes/UserRoute";
+import AdminRoute from "./components/routes/AdminRoutes";
 import UserPassword from "./pages/user/Password";
-import UserWishList from "./pages/user/Wishlist";
-
 import { auth } from "./firebase";
 import { useDispatch } from "react-redux";
 import Wishlist from "./pages/user/Wishlist";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import CategoryCreate from "./pages/admin/category/CategoryCreate";
+import CategoryUpdate from "./pages/admin/category/CategoryUpdate";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -64,6 +66,19 @@ const App = () => {
         </Route>
         <Route exact path="/user/wishlist" element={<UserRoute />}>
           <Route exact path="/user/wishlist" element={<Wishlist />}></Route>
+        </Route>
+        <Route exact path="/admin/dashboard" element={<AdminRoute />}>
+          <Route exact path="/admin/dashboard" element={<AdminDashboard />} />
+        </Route>
+        <Route exact path="/admin/category" element={<AdminRoute />}>
+          <Route exact path="/admin/category" element={<CategoryCreate />} />
+        </Route>
+        <Route exact path="/admin/category/:slug" element={<AdminRoute />}>
+          <Route
+            exact
+            path="/admin/category/:slug"
+            element={<CategoryUpdate />}
+          />
         </Route>
       </Routes>
     </>

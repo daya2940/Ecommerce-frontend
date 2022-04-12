@@ -22,3 +22,15 @@ export const currentUser = (authToken) => {
     }
   );
 };
+
+export const currentAdmin = (authtoken) => {
+  return axios.post(
+    `${process.env.REACT_APP_API}/current-admin`,
+    {},
+    {
+      headers: {
+        authtoken,
+      },
+    }
+  );
+};

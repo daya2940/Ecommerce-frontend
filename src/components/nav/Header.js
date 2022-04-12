@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import { Menu } from "antd";
 import { LOGOUT } from "../../constants/userConstants";
 import {
-  MailOutlined,
+  AppstoreOutlined,
   SettingOutlined,
   UserOutlined,
   LogoutOutlined,
+  MacCommandOutlined,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import firebase from "firebase/compat/app";
@@ -36,7 +37,7 @@ const Header = () => {
   };
   return (
     <Menu onClick={handleClick} selectedKeys={[current]} mode="horizontal">
-      <Menu.Item key="home" icon={<MailOutlined />}>
+      <Menu.Item key="home" icon={<AppstoreOutlined />}>
         <Link to="/">Home</Link>
       </Menu.Item>
       {!user ? (
@@ -58,6 +59,15 @@ const Header = () => {
           icon={<SettingOutlined />}
           title={user?.email.split("@")[0]}
         >
+          {user?.role === "subscriber" ? (
+            <Menu.Item key="subscriber" icon={<MacCommandOutlined />}>
+              <Link to="/user/history">Dashboard</Link>
+            </Menu.Item>
+          ) : (
+            <Menu.Item key="admin" icon={<MacCommandOutlined />}>
+              <Link to="/admin/dashboard">Dashboard</Link>
+            </Menu.Item>
+          )}
           <Menu.Item
             key="logout"
             onClick={handleLogout}

@@ -3,6 +3,7 @@ import { Button } from "antd";
 import { auth } from "../../firebase";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+
 import { useSelector } from "react-redux";
 
 const Register = () => {
