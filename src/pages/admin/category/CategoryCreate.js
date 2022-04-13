@@ -14,7 +14,8 @@ import {
   ExclamationCircleOutlined,
 } from "@ant-design/icons";
 import {} from "react-router-dom";
-import { useParams, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
+
 const { confirm } = Modal;
 
 const CategoryCreate = () => {
@@ -56,13 +57,13 @@ const CategoryCreate = () => {
     }
   };
 
-  const handleDelete = async () => {
+  const handleDelete = async (slug) => {
     confirm({
       title: "Do you Want to delete these items?",
       icon: <ExclamationCircleOutlined />,
       async onOk() {
         try {
-          await removeCategory(name, user.token).then((res) => {
+          await removeCategory(slug, user.token).then((res) => {
             toast.success(`${res?.data?.name} is deleted`);
             loadCategories();
           });
@@ -104,13 +105,7 @@ const CategoryCreate = () => {
           {CategoryForm()}
           <div className="mt-5">
             {categories?.map((item) => (
-              <Row
-                className="alert alert-secondary"
-                key={item._id}
-                onRow={(r) => ({
-                  onClick: () => console.log(r.key),
-                })}
-              >
+              <Row className="alert alert-secondary" key={item._id}>
                 <Col span={22}>{item.name}</Col>
                 <Col span={1}>
                   <Link
@@ -123,7 +118,7 @@ const CategoryCreate = () => {
                 <Col span={1}>
                   <DeleteOutlined
                     className="text-danger"
-                    onClick={handleDelete}
+                    onClick={() => handleDelete(item?.slug)}
                   />
                 </Col>
               </Row>
