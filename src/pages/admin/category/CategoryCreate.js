@@ -15,6 +15,7 @@ import {
 } from "@ant-design/icons";
 import {} from "react-router-dom";
 import { Link } from "react-router-dom";
+import CategoryForm from "../../../components/common-component/CategoryForm";
 
 const { confirm } = Modal;
 
@@ -49,6 +50,7 @@ const CategoryCreate = () => {
       await createCategory(name, user.token).then((res) => {
         setName("");
         toast.success(`${res?.data?.name} is created`);
+        loadCategories();
       });
     } catch (err) {
       toast.error(err?.response?.data);
@@ -77,23 +79,6 @@ const CategoryCreate = () => {
     });
   };
 
-  const CategoryForm = () => {
-    return (
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <input
-            type="text"
-            className="form-control"
-            onChange={(e) => setName(e.target.value)}
-            value={name}
-            autoFocus
-            required
-          />
-          <button className="btn btn-outline-primary mt-2">Save</button>
-        </div>
-      </form>
-    );
-  };
   return (
     <div className="container-fluid">
       <div className="row">
@@ -102,7 +87,11 @@ const CategoryCreate = () => {
         </div>
         <div className="col">
           <h4>Create Category</h4>
-          {CategoryForm()}
+          <CategoryForm
+            handleSubmit={handleSubmit}
+            name={name}
+            setName={setName}
+          />
           <div className="mt-5">
             {categories?.map((item) => (
               <Row className="alert alert-secondary" key={item._id}>

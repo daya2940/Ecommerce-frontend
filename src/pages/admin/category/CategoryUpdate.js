@@ -5,8 +5,9 @@ import { useSelector } from "react-redux";
 import { getCategory, updateCategory } from "../../../utils/category";
 
 import { useNavigate, useParams } from "react-router-dom";
+import CategoryForm from "../../../components/common-component/CategoryForm";
 
-const CategoryUpdate = ({ match }) => {
+const CategoryUpdate = () => {
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -47,23 +48,7 @@ const CategoryUpdate = ({ match }) => {
       setLoading(true);
     }
   };
-  const CategoryForm = () => {
-    return (
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <input
-            type="text"
-            className="form-control"
-            onChange={(e) => setName(e.target.value)}
-            value={name}
-            autoFocus
-            required
-          />
-          <button className="btn btn-outline-primary mt-2">Save</button>
-        </div>
-      </form>
-    );
-  };
+
   return (
     <div className="container-fluid">
       <div className="row">
@@ -72,7 +57,11 @@ const CategoryUpdate = ({ match }) => {
         </div>
         <div className="col">
           <h4>Update Category</h4>
-          {CategoryForm()}
+          <CategoryForm
+            handleSubmit={handleSubmit}
+            name={name}
+            setName={setName}
+          />
         </div>
       </div>
     </div>
