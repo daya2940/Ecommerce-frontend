@@ -23,6 +23,7 @@ const CategoryCreate = () => {
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const { user } = useSelector((state) => ({ ...state })); // obtaining token from the redux store
 
   useEffect(() => {
@@ -32,8 +33,8 @@ const CategoryCreate = () => {
   const loadCategories = async () => {
     try {
       await getCategories().then((res) => {
-        if (res.status === 200) {
-          setCategories(res.data);
+        if (res?.status === 200) {
+          setCategories(res?.data);
         } else {
           throw res;
         }
@@ -92,26 +93,41 @@ const CategoryCreate = () => {
             name={name}
             setName={setName}
           />
+          <input
+            type="text"
+            placeholder="Filter"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="form-control mb-4 mt-4"
+          />
           <div className="mt-5">
-            {categories?.map((item) => (
-              <Row className="alert alert-secondary" key={item._id}>
-                <Col span={22}>{item.name}</Col>
-                <Col span={1}>
-                  <Link
-                    to={`/admin/category/${item.slug}`}
-                    className=" justify-content-end"
-                  >
-                    <EditOutlined className="text-warning" />
-                  </Link>
-                </Col>
-                <Col span={1}>
-                  <DeleteOutlined
-                    className="text-danger"
-                    onClick={() => handleDelete(item?.slug)}
-                  />
-                </Col>
-              </Row>
-            ))}
+            {categories
+              .filter((val) => {
+                if (searchQuery == "") {
+                  return val.name;
+                } else if (val.name.includes(searchQuery)) {
+                  return val.name;
+                }
+              })
+              ?.map((item) => (
+                <Row className="alert alert-secondary" key={item._id}>
+                  <Col span={22}>{item.name}</Col>
+                  <Col span={1}>
+                    <Link
+                      to={`/admin/category/${item.slug}`}
+                      className=" justify-content-end"
+                    >
+                      <EditOutlined className="text-warning" />
+                    </Link>
+                  </Col>
+                  <Col span={1}>
+                    <DeleteOutlined
+                      className="text-danger"
+                      onClick={() => handleDelete(item?.slug)}
+                    />
+                  </Col>
+                </Row>
+              ))}
           </div>
         </div>
       </div>
