@@ -4,10 +4,11 @@ import { toast } from "react-toastify";
 import { Row, Col, Modal } from "antd";
 import { useSelector } from "react-redux";
 import {
-  createCategory,
-  getCategories,
-  removeCategory,
-} from "../../../utils/category";
+  createSubCategory,
+  getSubCategories,
+  removeSubCategory,
+} from "../../../utils/subCategory";
+import { getCategories } from "../../../utils/category";
 import {
   DeleteOutlined,
   EditOutlined,
@@ -15,12 +16,12 @@ import {
 } from "@ant-design/icons";
 import {} from "react-router-dom";
 import { Link } from "react-router-dom";
-import CategoryForm from "../../../components/common-component/CategoryForm";
+import SubCategoryForm from "../../../components/common-component/CategoryForm";
 import LocalSearch from "../../../components/common-component/LocalSearch";
 
 const { confirm } = Modal;
 
-const CategoryCreate = () => {
+const SubCategoryCreate = () => {
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState([]);
@@ -49,7 +50,7 @@ const CategoryCreate = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      await createCategory(name, user.token).then((res) => {
+      await createSubCategory(name, user.token).then((res) => {
         setName("");
         toast.success(`${res?.data?.name} is created`);
         loadCategories();
@@ -67,7 +68,7 @@ const CategoryCreate = () => {
       icon: <ExclamationCircleOutlined />,
       async onOk() {
         try {
-          await removeCategory(slug, user.token).then((res) => {
+          await removeSubCategory(slug, user.token).then((res) => {
             toast.success(`${res?.data?.name} is deleted`);
             loadCategories();
           });
@@ -88,8 +89,8 @@ const CategoryCreate = () => {
           <AdminNav />
         </div>
         <div className="col mt-2">
-          <h4>Create Category</h4>
-          <CategoryForm
+          <h4>Create SubCategory</h4>
+          <SubCategoryForm
             handleSubmit={handleSubmit}
             name={name}
             setName={setName}
@@ -113,7 +114,7 @@ const CategoryCreate = () => {
                   <Col span={22}>{item.name}</Col>
                   <Col span={1}>
                     <Link
-                      to={`/admin/category/${item.slug}`}
+                      to={`/admin/Subcategory/${item.slug}`}
                       className=" justify-content-end"
                     >
                       <EditOutlined className="text-warning" />
@@ -134,4 +135,4 @@ const CategoryCreate = () => {
   );
 };
 
-export default CategoryCreate;
+export default SubCategoryCreate;

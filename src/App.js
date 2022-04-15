@@ -21,6 +21,8 @@ import Wishlist from "./pages/user/Wishlist";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import CategoryCreate from "./pages/admin/category/CategoryCreate";
 import CategoryUpdate from "./pages/admin/category/CategoryUpdate";
+import SubCategoryCreate from "./pages/admin/sub-category/SubCategoryCreate";
+import SubCategoryUpdate from "./pages/admin/sub-category/SubCategoryUpdate";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -78,6 +80,20 @@ const App = () => {
             exact
             path="/admin/category/:slug"
             element={<CategoryUpdate />}
+          />
+        </Route>
+        <Route exact path="/admin/subcategory" element={<AdminRoute />}>
+          <Route
+            exact
+            path="/admin/subcategory"
+            element={<SubCategoryCreate />}
+          />
+        </Route>
+        <Route exact path="/admin/subcategory/:slug" element={<AdminRoute />}>
+          <Route
+            exact
+            path="/admin/subcategory/:slug"
+            element={<SubCategoryUpdate />}
           />
         </Route>
       </Routes>
