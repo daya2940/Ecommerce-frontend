@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import AdminNav from "../../../components/nav/AdminNav";
 import { toast } from "react-toastify";
-import { Row, Col, Modal } from "antd";
+import { Row, Col, Modal, Select } from "antd";
 import { useSelector } from "react-redux";
 import {
   createSubCategory,
@@ -18,6 +18,7 @@ import {} from "react-router-dom";
 import { Link } from "react-router-dom";
 import SubCategoryForm from "../../../components/common-component/CategoryForm";
 import LocalSearch from "../../../components/common-component/LocalSearch";
+const { Option } = Select;
 
 const { confirm } = Modal;
 
@@ -25,11 +26,14 @@ const SubCategoryCreate = () => {
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState([]);
+  const [category, setCategory] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [subCategory, setSubCategory] = useState([]);
   const { user } = useSelector((state) => ({ ...state })); // obtaining token from the redux store
 
   useEffect(() => {
     loadCategories();
+    loadSubCategoties();
   }, []);
 
   const loadCategories = async () => {
@@ -46,15 +50,31 @@ const SubCategoryCreate = () => {
     }
   };
 
+  const loadSubCategoties = async () => {
+    try {
+      await getSubCategories().then((res) => {
+        if (res?.status === 200) {
+          setSubCategory(res?.data);
+        } else {
+          throw res;
+        }
+      });
+    } catch (err) {
+      console.log(err, "unable to load subcategories");
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       setLoading(true);
-      await createSubCategory(name, user.token).then((res) => {
-        setName("");
-        toast.success(`${res?.data?.name} is created`);
-        loadCategories();
-      });
+      await createSubCategory({ name, parent: category }, user.token).then(
+        (res) => {
+          setName("");
+          toast.success(`${res?.data?.name} is created`);
+          loadSubCategoties();
+        }
+      );
     } catch (err) {
       toast.error(err?.response?.data);
     } finally {
@@ -70,7 +90,7 @@ const SubCategoryCreate = () => {
         try {
           await removeSubCategory(slug, user.token).then((res) => {
             toast.success(`${res?.data?.name} is deleted`);
-            loadCategories();
+            loadSubCategoties();
           });
         } catch (err) {
           toast.error(err?.response?.data);
@@ -82,6 +102,10 @@ const SubCategoryCreate = () => {
     });
   };
 
+  const handleSelect = (value) => {
+    setCategory(value);
+  };
+
   return (
     <div className="container-fluid">
       <div className="row">
@@ -90,6 +114,25 @@ const SubCategoryCreate = () => {
         </div>
         <div className="col mt-2">
           <h4>Create SubCategory</h4>
+
+          <div className="from-group">
+            <label>Parent Category :</label>
+            <Select
+              name="category"
+              style={{ width: 120 }}
+              className="m-2"
+              defaultValue={"Select"}
+              onChange={handleSelect}
+            >
+              {categories?.map((item) => {
+                return (
+                  <Option value={item._id} key={item._id}>
+                    {item.name}
+                  </Option>
+                );
+              })}
+            </Select>
+          </div>
           <SubCategoryForm
             handleSubmit={handleSubmit}
             name={name}
@@ -100,7 +143,7 @@ const SubCategoryCreate = () => {
             setSearchQuery={setSearchQuery}
           />
           <div className="mt-5">
-            {categories
+            {subCategory
               .filter((val) => {
                 if (searchQuery === "") {
                   return val.name;
