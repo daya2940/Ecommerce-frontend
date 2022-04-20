@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import "antd/dist/antd.css";
+import "./App.css";
 import "react-toastify/dist/ReactToastify.css";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
@@ -23,6 +24,7 @@ import CategoryCreate from "./pages/admin/category/CategoryCreate";
 import CategoryUpdate from "./pages/admin/category/CategoryUpdate";
 import SubCategoryCreate from "./pages/admin/sub-category/SubCategoryCreate";
 import SubCategoryUpdate from "./pages/admin/sub-category/SubCategoryUpdate";
+import ProductCreate from "./pages/admin/product/ProductCreate";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -95,6 +97,9 @@ const App = () => {
             path="/admin/subcategory/:slug"
             element={<SubCategoryUpdate />}
           />
+        </Route>
+        <Route exact path="/admin/product" element={<AdminRoute />}>
+          <Route exact path="/admin/product" element={<ProductCreate />} />
         </Route>
       </Routes>
     </>

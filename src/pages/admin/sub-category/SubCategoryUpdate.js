@@ -90,7 +90,7 @@ const SubCategoryUpdate = () => {
           <div className="from-group">
             <label>Parent Category :</label>
             <Select
-              name="category"
+              name="Subcategory"
               style={{ width: 120 }}
               className="m-2"
               defaultValue={"Select"}
