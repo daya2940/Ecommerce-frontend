@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
-import "antd/dist/antd.css";
 import "./App.css";
+import "antd/dist/antd.css";
 import "react-toastify/dist/ReactToastify.css";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";

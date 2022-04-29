@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import AdminNav from "../../../components/nav/AdminNav";
 import { toast } from "react-toastify";
-import { Row, Col, Modal } from "antd";
 import { useSelector } from "react-redux";
 import { createProduct } from "../../../utils/product";
 import {
@@ -9,21 +8,22 @@ import {
   EditOutlined,
   ExclamationCircleOutlined,
 } from "@ant-design/icons";
+import { getCategories, getProductSubCategory } from "../../../utils/category";
 import {} from "react-router-dom";
-import { Link } from "react-router-dom";
-import CategoryForm from "../../../components/common-component/CategoryForm";
-import LocalSearch from "../../../components/common-component/LocalSearch";
+import { Select } from "antd";
+
+const { Option } = Select;
 
 const initialState = {
   title: "",
   description: "",
   price: "",
-  // categories: [],
-  // category: "",
-  // subCategory:[],
+  categories: [],
+  category: "",
+  subCategory: [],
   shipping: "",
   quantity: "",
-  // images: [],
+  images: [],
   colors: ["Black", "Brown", "Silver", "white", "Blue", "Red", "Green"],
   brands: ["Apple", "Samsung", "Microsoft", "Asus", "Lenevo"],
   color: "",
@@ -32,6 +32,8 @@ const initialState = {
 
 const ProductCreate = () => {
   const { user } = useSelector((state) => ({ ...state })); // obtaining token from the redux store
+  const [subs, setSubs] = useState([]);
+  const [subOptions, setSubOptions] = useState("");
   const [values, setvalues] = useState(initialState);
   const {
     title,
@@ -44,9 +46,45 @@ const ProductCreate = () => {
     images,
     color,
     brand,
+    colors,
     categories,
     brands,
   } = values;
+
+  const loadCategories = async () => {
+    try {
+      await getCategories().then((res) => {
+        if (res?.status === 200) {
+          setvalues({ ...values, categories: res?.data });
+        } else {
+          throw res;
+        }
+      });
+    } catch (err) {
+      console.log(err, "unable to load categories");
+    }
+  };
+
+  const loadSubcategory = async (id) => {
+    try {
+      if (id !== "Please Select") {
+        await getProductSubCategory(id).then((res) => {
+          if (res.status === 200) {
+            console.log(res);
+            setSubs(res.data);
+          } else {
+            throw res;
+          }
+        });
+      }
+    } catch (err) {
+      toast.error(err?.response?.data?.err);
+    }
+  };
+
+  useEffect(() => {
+    loadCategories();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -60,12 +98,18 @@ const ProductCreate = () => {
         }
       });
     } catch (err) {
-      toast.error(err.message);
+      toast.error(err.response.data.err);
     }
   };
 
   const handleChange = (e) => {
     setvalues({ ...values, [e.target.name]: e.target.value });
+  };
+
+  const handleCategoryChange = (e) => {
+    e.preventDefault();
+    setvalues({ ...values, category: e.target.value });
+    loadSubcategory(e.target.value);
   };
 
   return (
@@ -88,7 +132,7 @@ const ProductCreate = () => {
               />
             </div>
             <div className="form-group">
-              <label className="fw-bold mt-2">Description</label>
+              <label className="fw-bold mt-2">Description :</label>
               <input
                 type="text"
                 name="description"
@@ -98,7 +142,7 @@ const ProductCreate = () => {
               />
             </div>
             <div className="form-group">
-              <label className="fw-bold mt-2">Price</label>
+              <label className="fw-bold mt-2">Price :</label>
               <input
                 type="number"
                 name="price"
@@ -108,7 +152,7 @@ const ProductCreate = () => {
               />
             </div>
             <div className="form-group">
-              <label className="fw-bold mt-2">Shipping</label>
+              <label className="fw-bold mt-2">Shipping :</label>
               <select
                 name="shipping"
                 className="form-control mt-2"
@@ -120,7 +164,7 @@ const ProductCreate = () => {
               </select>
             </div>
             <div className="form-group">
-              <label className="fw-bold mt-2">Quantity</label>
+              <label className="fw-bold mt-2">Quantity :</label>
               <input
                 type="number"
                 name="quantity"
@@ -130,7 +174,7 @@ const ProductCreate = () => {
               />
             </div>
             <div className="form-group">
-              <label className="fw-bold mt-2">Color</label>
+              <label className="fw-bold mt-2">Color :</label>
               <select
                 name="color"
                 className="form-control mt-2"
@@ -147,7 +191,7 @@ const ProductCreate = () => {
               </select>
             </div>
             <div className="form-group">
-              <label className="fw-bold mt-2">Brand</label>
+              <label className="fw-bold mt-2">Brand :</label>
               <select
                 name="brand"
                 className="form-control mt-2"
@@ -163,17 +207,58 @@ const ProductCreate = () => {
                 })}
               </select>
             </div>
+            <div className="from-group">
+              <label className="fw-bold mt-2">Category :</label>
+              <select
+                name="category"
+                className="form-control mt-2"
+                onChange={handleCategoryChange}
+              >
+                <option>Please Select</option>
+                {categories?.map((item) => {
+                  return (
+                    <option value={item._id} key={item._id}>
+                      {item.name}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
+            {subs?.length > 0 && (
+              <div className="from-group">
+                <label className="fw-bold mt-2">SubCategory :</label>
+                <Select
+                  name="subCategory"
+                  style={{ width: "100%" }}
+                  mode="multiple"
+                  placeholder="Please select"
+                  value={subCategory}
+                  onChange={(value) =>
+                    setvalues({ ...values, subCategory: value })
+                  }
+                >
+                  {subs?.map((item) => {
+                    return (
+                      <Option value={item._id} key={item._id}>
+                        {item.name}
+                      </Option>
+                    );
+                  })}
+                </Select>
+              </div>
+            )}
+
             <button
-              className="btn btn-outline-primary mt-2"
-              // disabled={
-              //   !title ||
-              //   !description ||
-              //   !quantity ||
-              //   !price ||
-              //   !shipping ||
-              //   initialState.colors !== "Please Select" ||
-              //   brand !== "Please Select"
-              // }
+              className="btn btn-outline-primary mt-2 block"
+              disabled={
+                !title ||
+                !description ||
+                !quantity ||
+                !price ||
+                !shipping ||
+                !colors.includes(color) ||
+                !brands.includes(brand)
+              }
             >
               Save
             </button>

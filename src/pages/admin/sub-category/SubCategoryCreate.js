@@ -142,7 +142,7 @@ const SubCategoryCreate = () => {
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
           />
-          <div className="mt-5">
+          <div className="mt-5" style={{ height: "400px", overflow: "scroll" }}>
             {subCategory
               .filter((val) => {
                 if (searchQuery === "") {
