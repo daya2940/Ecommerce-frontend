@@ -3,14 +3,10 @@ import AdminNav from "../../../components/nav/AdminNav";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { createProduct } from "../../../utils/product";
-import {
-  DeleteOutlined,
-  EditOutlined,
-  ExclamationCircleOutlined,
-} from "@ant-design/icons";
 import { getCategories, getProductSubCategory } from "../../../utils/category";
 import {} from "react-router-dom";
 import { Select } from "antd";
+import FileUpload from "./FileUpload";
 
 const { Option } = Select;
 
@@ -33,8 +29,8 @@ const initialState = {
 const ProductCreate = () => {
   const { user } = useSelector((state) => ({ ...state })); // obtaining token from the redux store
   const [subs, setSubs] = useState([]);
-  const [subOptions, setSubOptions] = useState("");
   const [values, setvalues] = useState(initialState);
+  const [loading, setLoading] = useState(false);
   const {
     title,
     description,
@@ -70,7 +66,6 @@ const ProductCreate = () => {
       if (id !== "Please Select") {
         await getProductSubCategory(id).then((res) => {
           if (res.status === 200) {
-            console.log(res);
             setSubs(res.data);
           } else {
             throw res;
@@ -108,7 +103,7 @@ const ProductCreate = () => {
 
   const handleCategoryChange = (e) => {
     e.preventDefault();
-    setvalues({ ...values, category: e.target.value });
+    setvalues({ ...values, subs: [], category: e.target.value });
     loadSubcategory(e.target.value);
   };
 
@@ -118,8 +113,17 @@ const ProductCreate = () => {
         <div className="col-md-2">
           <AdminNav />
         </div>
-        <div className="col-md-10 mt-2">
+        <div className="col-md-1"></div>
+        <div className="col-md-6 mt-2">
           <h4>Product Create</h4>
+          <div>
+            <FileUpload
+              values={values}
+              setvalues={setvalues}
+              setLoading={setLoading}
+            />
+          </div>
+
           <form onSubmit={handleSubmit}>
             <div className="form-group">
               <label className="fw-bold">Title</label>
@@ -171,6 +175,7 @@ const ProductCreate = () => {
                 className="form-control mt-2"
                 value={quantity}
                 onChange={handleChange}
+                min="0"
               />
             </div>
             <div className="form-group">
@@ -250,6 +255,7 @@ const ProductCreate = () => {
 
             <button
               className="btn btn-outline-primary mt-2 block"
+              style={{ width: "100%" }}
               disabled={
                 !title ||
                 !description ||

@@ -1,0 +1,321 @@
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
+import { getSingleProduct } from "../../../utils/product";
+import { getCategories, getProductSubCategory } from "../../../utils/category";
+import { Select, message } from "antd";
+import AdminNav from "../../../components/nav/AdminNav";
+import FileUpload from "./FileUpload";
+import Spinner from "../../../components/common-component/Spinner";
+
+const { Option } = Select;
+
+const initialState = {
+  title: "",
+  description: "",
+  price: "",
+  categories: [],
+  category: "",
+  subCategory: [],
+  shipping: "",
+  quantity: "",
+  images: [],
+  colors: ["Black", "Brown", "Silver", "white", "Blue", "Red", "Green"],
+  brands: ["Apple", "Samsung", "Microsoft", "Asus", "Lenevo"],
+  color: "",
+  brand: "",
+};
+
+const ProductUpdate = () => {
+  const { user } = useSelector((state) => ({ ...state })); // obtaining token from the redux store
+  const [subs, setSubs] = useState([]);
+  const { slug } = useParams();
+  const [values, setvalues] = useState(initialState);
+  const [loading, setLoading] = useState(false);
+
+  const getProductBySlug = async () => {
+    setLoading(true);
+    await getSingleProduct(slug)
+      .then((res) => {
+        console.log(res);
+        setvalues({
+          title: res.data.title,
+          description: res.data.description,
+          price: res.data.price,
+          categories: res.data.categories,
+          category: res.data.category.name,
+          subCategory: res.data.subCategory,
+          shipping: res.data.shipping,
+          quantity: res.data.quantity,
+          images: res.data.images,
+          colors: ["Black", "Brown", "Silver", "white", "Blue", "Red", "Green"],
+          brands: ["Apple", "Samsung", "Microsoft", "Asus", "Lenevo"],
+          color: res.data.color,
+          brand: res.data.brand,
+        });
+        setLoading(false);
+      })
+      .catch((err) => {
+        message.err(err);
+        setLoading(false);
+      });
+  };
+
+  const {
+    title,
+    description,
+    price,
+    category,
+    subCategory,
+    shipping,
+    quantity,
+    images,
+    color,
+    brand,
+    colors,
+    categories,
+    brands,
+  } = values;
+
+  useEffect(() => {
+    getProductBySlug();
+  }, []);
+
+  const loadCategories = async () => {
+    try {
+      await getCategories().then((res) => {
+        if (res?.status === 200) {
+          setvalues({ ...values, categories: res?.data });
+        } else {
+          throw res;
+        }
+      });
+    } catch (err) {
+      console.log(err, "unable to load categories");
+    }
+  };
+
+  const loadSubcategory = async (id) => {
+    try {
+      if (id !== "Please Select") {
+        await getProductSubCategory(id).then((res) => {
+          if (res.status === 200) {
+            setSubs(res.data);
+          } else {
+            throw res;
+          }
+        });
+      }
+    } catch (err) {
+      toast.error(err?.response?.data?.err);
+    }
+  };
+
+  useEffect(() => {
+    loadCategories();
+  }, []);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    // try {
+    //   await updateProduct(values, user.token).then((res) => {
+    //     if (res.status === 200) {
+    //       toast.success(`${res.data.title} is created`);
+    //       window.location.reload();
+    //     } else {
+    //       throw res;
+    //     }
+    //   });
+    // } catch (err) {
+    //   toast.error(err.response.data.err);
+    // }
+  };
+
+  const handleChange = (e) => {
+    setvalues({ ...values, [e.target.name]: e.target.value });
+  };
+
+  const handleCategoryChange = (e) => {
+    e.preventDefault();
+    setvalues({ ...values, subs: [], category: e.target.value });
+    loadSubcategory(e.target.value);
+  };
+
+  return (
+    <div className="container-fluid">
+      {loading ? (
+        <Spinner />
+      ) : (
+        <div className="row">
+          <div className="col-md-2">
+            <AdminNav />
+          </div>
+          <div className="col-md-1"></div>
+          <div className="col-md-6 mt-2">
+            <h4>Product Update</h4>
+            {/* <div>
+              <FileUpload
+                values={values}
+                setvalues={setvalues}
+                setLoading={setLoading}
+              />
+            </div> */}
+
+            <form onSubmit={handleSubmit}>
+              <div className="form-group">
+                <label className="fw-bold">Title</label>
+                <input
+                  type="text"
+                  name="title"
+                  className="form-control"
+                  value={title}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="form-group">
+                <label className="fw-bold mt-2">Description :</label>
+                <input
+                  type="text"
+                  name="description"
+                  className="form-control"
+                  value={description}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="form-group">
+                <label className="fw-bold mt-2">Price :</label>
+                <input
+                  type="number"
+                  name="price"
+                  className="form-control mt-2"
+                  value={price}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="form-group">
+                <label className="fw-bold mt-2">Shipping :</label>
+                <select
+                  name="shipping"
+                  className="form-control mt-2"
+                  onChange={handleChange}
+                  value={shipping}
+                >
+                  <option>Please Select</option>
+                  <option value="No">No</option>
+                  <option value="Yes">Yes</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <label className="fw-bold mt-2">Quantity :</label>
+                <input
+                  type="number"
+                  name="quantity"
+                  className="form-control mt-2"
+                  value={quantity}
+                  onChange={handleChange}
+                  min="0"
+                />
+              </div>
+              <div className="form-group">
+                <label className="fw-bold mt-2">Color :</label>
+                <select
+                  name="color"
+                  className="form-control mt-2"
+                  onChange={handleChange}
+                  value={color}
+                >
+                  <option>Please Select</option>
+                  {initialState?.colors?.map((item) => {
+                    return (
+                      <option value={item} key={item}>
+                        {item}
+                      </option>
+                    );
+                  })}
+                </select>
+              </div>
+              <div className="form-group">
+                <label className="fw-bold mt-2">Brand :</label>
+                <select
+                  name="brand"
+                  className="form-control mt-2"
+                  onChange={handleChange}
+                  value={brand}
+                >
+                  <option>Please Select</option>
+                  {brands.map((item) => {
+                    return (
+                      <option value={item} key={item}>
+                        {item}
+                      </option>
+                    );
+                  })}
+                </select>
+              </div>
+              <div className="from-group">
+                <label className="fw-bold mt-2">Category :</label>
+                <select
+                  name="category"
+                  className="form-control mt-2"
+                  onChange={handleCategoryChange}
+                  value={category}
+                >
+                  <option>Please Select</option>
+                  {categories?.map((item) => {
+                    return (
+                      <option value={item._id} key={item._id}>
+                        {item.name}
+                      </option>
+                    );
+                  })}
+                </select>
+              </div>
+              {subs?.length > 0 && (
+                <div className="from-group">
+                  <label className="fw-bold mt-2">SubCategory :</label>
+                  <Select
+                    name="subCategory"
+                    style={{ width: "100%" }}
+                    mode="multiple"
+                    placeholder="Please select"
+                    value={subCategory}
+                    onChange={(value) =>
+                      setvalues({ ...values, subCategory: value })
+                    }
+                  >
+                    {subs?.map((item) => {
+                      return (
+                        <Option value={item._id} key={item._id}>
+                          {item.name}
+                        </Option>
+                      );
+                    })}
+                  </Select>
+                </div>
+              )}
+
+              <button
+                className="btn btn-outline-primary mt-2 block"
+                style={{ width: "100%" }}
+                disabled={
+                  !title ||
+                  !description ||
+                  !quantity ||
+                  !price ||
+                  !shipping ||
+                  !colors.includes(color) ||
+                  !brands.includes(brand)
+                }
+              >
+                Save
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default ProductUpdate;

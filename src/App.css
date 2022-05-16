@@ -3,3 +3,12 @@ input {
     border-width: 0 0 2px;
     border-color: blue
   }
+
+  .example {
+    margin: 20px 0;
+    margin-bottom: 20px;
+    padding: 30px 50px;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+  }
