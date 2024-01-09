@@ -30,6 +30,7 @@ import ProductUpdate from "./pages/admin/product/ProductUpdate";
 
 const App = () => {
   const dispatch = useDispatch();
+
   useEffect(() => {
     const unSubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {

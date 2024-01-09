@@ -17,6 +17,7 @@ const Register = () => {
       navigate("/");
     }
   }, [user]);
+
   const handleSubmit = async (e) => {
     if (user?.email === email) {
       toast.error("User already exist.Please login");
@@ -47,7 +48,6 @@ const Register = () => {
       />
       <div className="d-flex justify-content-center mt-4">
         <Button
-          type="primary"
           type="primary"
           htmlType="submit"
           className="mb-3"

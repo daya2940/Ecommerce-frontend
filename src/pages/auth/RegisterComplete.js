@@ -4,6 +4,7 @@ import { auth } from "../../firebase";
 import { useDispatch, useSelector } from "react-redux";
 import { LOGGED_IN_USER } from "../../constants/userConstants";
 import { createOrUpdateUser, currentUser } from "../../utils/helper";
+import { useNavigate } from "react-router-dom";
 
 import { toast } from "react-toastify";
 
@@ -11,6 +12,7 @@ const RegisterComplete = ({ history }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     setEmail(localStorage.getItem("emailForRegistraion"));
@@ -50,7 +52,7 @@ const RegisterComplete = ({ history }) => {
                 _id: res.data._id,
               },
             });
-            history.push("/login");
+            navigate("/login");
           })
           .catch((err) => {
             console.log(err);
