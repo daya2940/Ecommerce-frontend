@@ -26,19 +26,15 @@ const ForgotPassword = () => {
         url: process.env.REACT_APP_FORGOT_PASSWORD_REDIRECT_URL,
         handleCodeInApp: true,
       };
-      await auth
-        .sendPasswordResetEmail(email, config)
-        .then((res) => {
-          if (res.status === 200) {
-            setEmail("");
-            toast.success(`Email Sent to ${email} to reset the password`);
-          }
-        })
-        .catch((err) => {
-          toast.error(err.message);
-        });
+      const res = await auth.sendPasswordResetEmail(email, config);
+      console.log(res);
+      if (res.status === 200) {
+        setEmail("");
+        toast.success(`Email Sent to ${email} to reset the password`);
+      }
       navigate("/login");
     } catch (err) {
+      console.log(err);
       toast.error(err.message);
     } finally {
       setLoading(false);

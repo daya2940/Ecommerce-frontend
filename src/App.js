@@ -12,7 +12,7 @@ import History from "./pages/user/History";
 import { ToastContainer } from "react-toastify";
 import { Routes, Route } from "react-router-dom";
 import { LOGGED_IN_USER } from "./constants/userConstants";
-import { currentUser } from "./utils/helper";
+import { currentUser } from "./utils/auth";
 import UserRoute from "./components/routes/UserRoute";
 import AdminRoute from "./components/routes/AdminRoutes";
 import UserPassword from "./pages/user/Password";

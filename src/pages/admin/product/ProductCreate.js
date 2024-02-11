@@ -101,6 +101,8 @@ const ProductCreate = () => {
     setvalues({ ...values, [e.target.name]: e.target.value });
   };
 
+  console.log(subs, "line104");
+
   const handleCategoryChange = (e) => {
     e.preventDefault();
     setvalues({ ...values, subs: [], category: e.target.value });

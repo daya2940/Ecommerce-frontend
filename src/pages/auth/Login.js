@@ -7,7 +7,7 @@ import { useNavigate, Link } from "react-router-dom";
 
 import { auth, googleAuthProvider } from "../../firebase";
 import { toast } from "react-toastify";
-import { createOrUpdateUser } from "../../utils/helper";
+import { createOrUpdateUser } from "../../utils/auth";
 
 const Register = () => {
   const dispatch = useDispatch();

@@ -58,6 +58,7 @@ const Header = () => {
           key="Username"
           icon={<SettingOutlined />}
           title={user?.email.split("@")[0]}
+          // className="float-right"
         >
           {user?.role === "subscriber" ? (
             <Menu.Item key="subscriber" icon={<MacCommandOutlined />}>

@@ -2,12 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import { useSelector } from "react-redux";
 import LoadingToRedirect from "./LoadingToRedirect";
-import { currentAdmin } from "../../utils/helper";
+import { currentAdmin } from "../../utils/auth";
 
 //Role based authentication and route protecion
 const AdminRoute = ({ children, ...rest }) => {
   const { user } = useSelector((state) => ({ ...state }));
   const [adminRoute, setAdminRoute] = useState(false);
+
   useEffect(() => {
     if (user?.token) {
       currentAdmin(user.token)
@@ -22,6 +23,7 @@ const AdminRoute = ({ children, ...rest }) => {
         });
     }
   }, [user]);
+
   return adminRoute ? (
     <Outlet {...rest} render={() => children} />
   ) : (

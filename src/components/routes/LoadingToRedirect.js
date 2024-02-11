@@ -4,6 +4,7 @@ import { useNavigate, Link } from "react-router-dom";
 const LoadingToRedirect = () => {
   const navigate = useNavigate();
   const [count, setCount] = useState(5);
+
   useEffect(() => {
     const interval = setInterval(() => {
       setCount((current) => --current);

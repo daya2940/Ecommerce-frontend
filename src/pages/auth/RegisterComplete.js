@@ -3,7 +3,7 @@ import { Button } from "antd";
 import { auth } from "../../firebase";
 import { useDispatch, useSelector } from "react-redux";
 import { LOGGED_IN_USER } from "../../constants/userConstants";
-import { createOrUpdateUser, currentUser } from "../../utils/helper";
+import { createOrUpdateUser, currentUser } from "../../utils/auth";
 import { useNavigate } from "react-router-dom";
 
 import { toast } from "react-toastify";
