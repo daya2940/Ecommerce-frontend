@@ -47,17 +47,31 @@ const ProductCreate = () => {
     brands,
   } = values;
 
+  // const loadCategories = async () => {
+  //   try {
+  //     await getCategories().then((res) => {
+  //       if (res?.status === 200) {
+  //         setvalues({ ...values, categories: res?.data });
+  //       } else {
+  //         throw res;
+  //       }
+  //     });
+  //   } catch (err) {
+  //     console.log(err, "unable to load categories");
+  //   }
+  // };
+
   const loadCategories = async () => {
     try {
-      await getCategories().then((res) => {
-        if (res?.status === 200) {
-          setvalues({ ...values, categories: res?.data });
-        } else {
-          throw res;
-        }
-      });
+      const res = await getCategories();
+
+      if (res?.status === 200) {
+        setvalues({ ...values, categories: res?.data });
+      } else {
+        throw res;
+      }
     } catch (err) {
-      console.log(err, "unable to load categories");
+      console.error("Unable to load categories:", err);
     }
   };
 
@@ -100,8 +114,6 @@ const ProductCreate = () => {
   const handleChange = (e) => {
     setvalues({ ...values, [e.target.name]: e.target.value });
   };
-
-  console.log(subs, "line104");
 
   const handleCategoryChange = (e) => {
     e.preventDefault();

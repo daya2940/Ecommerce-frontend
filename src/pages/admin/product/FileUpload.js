@@ -7,11 +7,9 @@ import { useSelector } from "react-redux";
 
 const FileUpload = ({ values, setvalues, setLoading }) => {
   const { user } = useSelector((state) => ({ ...state }));
-
   const fileUploadAndResize = (e) => {
     const files = e.target.files;
     const allUploadFiles = values.images;
-    console.log(files);
     if (files) {
       setLoading(true);
       for (let i = 0; i < files.length; i++) {
@@ -23,6 +21,7 @@ const FileUpload = ({ values, setvalues, setLoading }) => {
           100,
           0,
           (uri) => {
+            console.log(uri, "line28");
             axios
               .post(
                 `${process.env.REACT_APP_API}/uploadImages`,
@@ -36,6 +35,7 @@ const FileUpload = ({ values, setvalues, setLoading }) => {
                 }
               )
               .then((res) => {
+                console.log(res, "line40");
                 setLoading(false);
                 allUploadFiles.push(res?.data);
                 setvalues({ ...values, images: allUploadFiles });
@@ -86,7 +86,7 @@ const FileUpload = ({ values, setvalues, setLoading }) => {
         <input
           type="file"
           multiple
-          accept="images/*"
+          accept="image/jpeg, image/png, image/gif"
           onChange={fileUploadAndResize}
         />
       </div>
